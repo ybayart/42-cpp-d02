@@ -52,10 +52,7 @@ Fixed	parse_add(std::string str, int &pos)
 		if (op != '+' && op != '-')
 			return (n);
 		n2 = parse_mul(str, ++pos);
-		if (op == '+')
-			n = n + n2;
-		else
-			n = n - n2;
+		n = n + (op == '+' ? n2 : (Fixed)0 - n2);
 	}
 	return (n);
 }
@@ -75,10 +72,7 @@ Fixed	parse_mul(std::string str, int &pos)
 		if (op != '/' && op != '*')
 			return (n);
 		n2 = parse_num(str, ++pos);
-		if (op == '*')
-			n = n * n2;
-		else if (op == '/')
-			n = n / n2;
+		n = n * (op == '*' ? n2 : (Fixed)1 / n2);
 	}
 	return (n);
 }
@@ -87,9 +81,9 @@ int		main(int argc, char **argv)
 {
 	int		pos;
 
-	if (argc <= 1)
+	if (argc != 2)
 	{
-		std::cout << "Missing argument: " << argv[0] << " (expression)" << std::endl;
+		std::cout << "Unknown argument: " << argv[0] << " (expression)" << std::endl;
 		return (0);
 	}
 	pos = 0;
