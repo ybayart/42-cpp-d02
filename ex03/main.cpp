@@ -17,95 +17,82 @@
 #include "Fixed.hpp"
 #include "main.hpp"
 
-Fixed	parse_number(std::string s, int &pos)
+Fixed	parse_num(std::string str, int &pos)
 {
-	Fixed nbr;
+	Fixed	n;
+	float	result;
 
-	while (s.at(pos) == ' ')
+	while (str.at(pos) == ' ')
 		pos++;
-
-	if (s.at(pos) == '(')
+	if (str.at(pos) == '(')
 	{
-		pos++;
-		nbr = parse_sum(s, pos);
-		if (s.at(pos) == ')')
+		n = parse_add(str, ++pos);
+		if (str.at(pos) == ')')
 			pos++;
-		return (nbr);
+		return (n);
 	}
-
-
-	std::stringstream ss(s.substr(pos));
-	float result;
-
-	ss >> result;
-	pos += ss.tellg();
+	std::stringstream strs(str.substr(pos));
+	strs >> result;
+	pos += strs.tellg();
 	return (Fixed(result));
 }
 
-Fixed	parse_factors(std::string s, int &pos)
+Fixed	parse_add(std::string str, int &pos)
 {
-	Fixed	nbr;
-	Fixed	nbr2;
+	Fixed	n;
+	Fixed	n2;
 	char	op;
 
-	nbr = parse_number(s, pos);
-	while ((size_t)pos < s.size())
+	n = parse_mul(str, pos);
+	while ((size_t)pos < str.size())
 	{
-		while (s.at(pos) == ' ')
+		while (str.at(pos) == ' ')
 			pos++;
-
-		op = s.at(pos);
-		if (op != '/' && op != '*')
-			return (nbr);
-
-		pos++;
-		nbr2 = parse_number(s, pos);
-
-		if (op == '/')
-			nbr = nbr / nbr2;
-		else if (op == '*')
-			nbr = nbr * nbr2;
+		op = str.at(pos);
+		if (op != '+' && op != '-')
+			return (n);
+		n2 = parse_mul(str, ++pos);
+		if (op == '+')
+			n = n + n2;
+		else
+			n = n - n2;
 	}
-	return (nbr);
+	return (n);
 }
 
-Fixed	parse_sum(std::string s, int &pos)
+Fixed	parse_mul(std::string str, int &pos)
 {
-	Fixed	nbr;
-	Fixed	nbr2;
+	Fixed	n;
+	Fixed	n2;
 	char	op;
 
-	nbr = parse_factors(s, pos);
-
-	while ((size_t)pos < s.size())
+	n = parse_num(str, pos);
+	while ((size_t)pos < str.size())
 	{
-		while (s.at(pos) == ' ')
+		while (str.at(pos) == ' ')
 			pos++;
-
-		op = s.at(pos);
-		if (op != '+' && op != '-')
-			return (nbr);
-
-		pos++;
-		nbr2 = parse_factors(s, pos);
-
-		if (op == '+')
-			nbr = nbr + nbr2;
-		else
-			nbr = nbr - nbr2;
+		op = str.at(pos);
+		if (op != '/' && op != '*')
+			return (n);
+		n2 = parse_num(str, ++pos);
+		if (op == '*')
+			n = n * n2;
+		else if (op == '/')
+			n = n / n2;
 	}
-	return (nbr);
+	return (n);
 }
 
 int		main(int argc, char **argv)
 {
+	int		pos;
+
 	if (argc <= 1)
 	{
-		std::cout << "Usage: ./eval_expr (expression)" << std::endl;
+		std::cout << "Missing argument: " << argv[0] << " (expression)" << std::endl;
 		return (0);
 	}
-
-	int pos = 0;
-	std::cout << parse_sum(argv[1], pos) << std::endl;
+	pos = 0;
+	std::cout << parse_add(argv[1], pos) << std::endl;
 	return (0);
 }

@@ -13,8 +13,8 @@
 #ifndef MAIN_HPP
 # define MAIN_HPP
 
-Fixed	parse_number(std::string s, int &pos);
-Fixed	parse_factors(std::string s, int &pos);
-Fixed	parse_sum(std::string s, int &pos);
+Fixed	parse_num(std::string str, int &pos);
+Fixed	parse_mul(std::string str, int &pos);
+Fixed	parse_add(std::string str, int &pos);
 
 #endif
