@@ -6,7 +6,7 @@
 /*   By: ybayart <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/14 15:39:52 by ybayart           #+#    #+#             */
-/*   Updated: 2020/01/14 15:41:31 by ybayart          ###   ########.fr       */
+/*   Updated: 2020/05/03 18:22:13 by hexa             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ Fixed	parse_mul(std::string str, int &pos)
 		if (op != '/' && op != '*')
 			return (n);
 		n2 = parse_num(str, ++pos);
-		n = n * (op == '*' ? n2 : (Fixed)1 / n2);
+		n = (op == '*' ? n * n2 : n / n2);
 	}
 	return (n);
 }
